@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <CheckBox
+        android:onClick="CheckClicked"
         android:id="@+id/CheckDone"
         android:layout_weight="1"
         android:textSize="25dp"
@@ -16,6 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"/>
     <ImageView
+        android:onClick="DeleteClicked"
         android:id="@+id/ButtonDelete"
         android:layout_weight="0"
         android:src="@drawable/delete"

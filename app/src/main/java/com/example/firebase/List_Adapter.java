@@ -34,6 +34,7 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List_item list_item = mList_items.get(position);
         holder.checkBox.setText(list_item.getTask());
+        holder.checkBox.setChecked(list_item.isDone());
     }
 
     @Override

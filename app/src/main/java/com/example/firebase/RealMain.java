@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -153,7 +154,7 @@ public class RealMain extends AppCompatActivity {
         collectData();
     }
 
-    private String getCurrentUser() {
+    private void getCurrentUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // Name, email address, and profile photo Url
@@ -169,8 +170,69 @@ public class RealMain extends AppCompatActivity {
             // FirebaseUser.getIdToken() instead.
             String uid = user.getUid();
 
-            return email;
+
         }
-        return "";
+        
+    }
+
+    public void DeleteClicked(View view) {
+        View Row = (View) view.getParent();
+        RecyclerView cycle = (RecyclerView) Row.getParent();
+        int position = cycle.getChildLayoutPosition(Row);
+
+        deleteTask(position);
+        tasks.remove(position);
+        taskId.remove(position);
+        updateUI();
+    }
+
+    private void deleteTask(int position) {
+        // [START delete_document]
+        db.collection("todos").document(taskId.get(position))
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+        // [END delete_document]
+    }
+
+    public void CheckClicked(View view) {
+        CheckBox checkBox = (CheckBox) view;
+        View Row = (View) view.getParent();
+        RecyclerView cycle = (RecyclerView) Row.getParent();
+        int position = cycle.getChildLayoutPosition(Row);
+        if(checkBox.isChecked())
+            updateTask(position,true);
+        else
+            updateTask(position,false);
+
+    }
+
+    private void updateTask(int position, boolean done) {
+        // [START delete_document]
+        db.collection("todos").document(taskId.get(position))
+                .update("done",done)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+        // [END delete_document]
     }
 }
