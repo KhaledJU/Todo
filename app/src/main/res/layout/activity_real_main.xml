@@ -15,28 +15,30 @@
         android:layout_height="0dp">
         <EditText
             android:id="@+id/EditNewTask"
-            android:layout_marginRight="20sp"
             android:textSize="30dp"
             android:hint="New task"
-            android:layout_weight="0.75"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/ButtonAdd"
-            android:textSize="25dp"
-            android:text="@string/add"
-            android:layout_weight="0.25"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <ListView
-        android:id="@+id/List_view"
-        android:layout_marginHorizontal="40sp"
-        android:layout_weight="0.8"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
+            android:layout_height="0dp"/>
+        <ImageView
+            android:id="@+id/ImageAdd"
+            android:src="@drawable/add"
+            android:layout_weight="0"
+            android:layout_width="45dp"
+            android:layout_height="45dp" />
 
-    </ListView>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView"
+        android:layout_weight="0.8"
+        android:layout_marginHorizontal="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+
     <Button
         android:layout_weight="0.1"
         android:id="@+id/ButtonLogout"
