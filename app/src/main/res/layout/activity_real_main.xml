@@ -8,11 +8,12 @@
     tools:context=".RealMain">
 
     <LinearLayout
+        android:layout_marginTop="30dp"
         android:layout_weight="0.1"
         android:layout_marginHorizontal="40sp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="wrap_content">
         <EditText
             android:id="@+id/EditNewTask"
             android:textSize="30dp"

@@ -43,6 +43,7 @@ public class RealMain extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<List_item> tasks;
+    private List<String> taskId;
 
 
     private String TAG = "RealMain";
@@ -62,16 +63,10 @@ public class RealMain extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         tasks = new ArrayList<List_item>();
-
-        tasks.add(new List_item("test", false));
-
-        adapter = new List_Adapter(tasks,this);
-        recyclerView.setAdapter(adapter);
+        taskId = new ArrayList<String>();
 
         collectData();
-        //String email = getCurrentUser();
 
-        //textInfo.setText("Welcome "+email);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +86,7 @@ public class RealMain extends AppCompatActivity {
                 else {
                     createNewTask(editNewTask.getText().toString());
                     editNewTask.setText("");
+                    collectData();
                 }
 
             }
@@ -107,10 +103,13 @@ public class RealMain extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             //listView.getEmptyView();
+                            tasks = new ArrayList<>();
+                            taskId = new ArrayList<>();
                             for (QueryDocumentSnapshot data : task.getResult()) {
-                                //insertToDoList(data.get("task").toString());
+                                insertToList(data);
                                 Log.d(TAG,data.get("task").toString());
                             }
+                            updateUI();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
@@ -118,9 +117,14 @@ public class RealMain extends AppCompatActivity {
                 });
     }
 
-    private void insertToDoList(String task) {
-        TextView textView = new TextView(this);
-        textView.setText(task);
+    private void updateUI() {
+        adapter = new List_Adapter(tasks,this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void insertToList(QueryDocumentSnapshot data) {
+        tasks.add(new List_item(data.get("task").toString(),(boolean) data.get("done")));
+        taskId.add(data.getId());
     }
 
     private void createNewTask(String newTask) {
@@ -128,6 +132,7 @@ public class RealMain extends AppCompatActivity {
         Map<String, Object> task = new HashMap<>();
         task.put("userId", mAuth.getUid());
         task.put("task", newTask);
+        task.put("done", false);
 
         // Add a new task
         db.collection("todos")
