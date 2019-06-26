@@ -19,30 +19,32 @@
         android:inputType="textPassword"
         android:id="@+id/PassText"
         android:layout_marginHorizontal="40sp"
-        android:layout_marginTop="50sp"
+        android:layout_marginTop="40dp"
         android:hint="@string/password"
         android:textSize="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
+        android:background="@color/colorAccent"
         android:id="@+id/LoginButton"
-        android:layout_marginHorizontal="40sp"
+        android:layout_marginHorizontal="100dp"
         android:layout_marginTop="50sp"
         android:text="@string/login"
         android:textSize="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
+        android:background="@color/colorAccent"
         android:id="@+id/SignButton"
-        android:layout_marginHorizontal="40sp"
-        android:layout_marginTop="20sp"
+        android:layout_marginHorizontal="100dp"
+        android:layout_marginTop="35dp"
         android:textSize="25dp"
         android:text="@string/sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <com.google.android.gms.common.SignInButton
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="35dp"
         android:layout_gravity="center"
         android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"

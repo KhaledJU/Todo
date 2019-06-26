@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class RealMain extends AppCompatActivity {
     private ImageView imageAdd;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<List_item> tasks;
@@ -58,6 +62,7 @@ public class RealMain extends AppCompatActivity {
         imageAdd = findViewById(R.id.ImageAdd);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        progressBar = findViewById(R.id.Progress_circular);
 
         recyclerView = findViewById(R.id.RecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -68,6 +73,32 @@ public class RealMain extends AppCompatActivity {
 
         collectData();
 
+        editNewTask.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String str = editable.toString();
+                if(str.contains("Israel")) {
+                    str = str.replace("Israel", "Palestine");
+                    editNewTask.setText(str);
+                    editNewTask.setSelection(str.length());
+                }
+                if (str.contains("israel")){
+                    str = str.replace("israel","palestine");
+                    editNewTask.setText(str);
+                    editNewTask.setSelection(str.length());
+                }
+            }
+        });
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +127,8 @@ public class RealMain extends AppCompatActivity {
     }
 
     private void collectData() {
+        recyclerView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         db.collection("todos")
                 .whereEqualTo("userId",mAuth.getUid())
                 .get()
@@ -110,6 +143,8 @@ public class RealMain extends AppCompatActivity {
                                 insertToList(data);
                                 Log.d(TAG,data.get("task").toString());
                             }
+                            progressBar.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             updateUI();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
