@@ -10,7 +10,7 @@
     <EditText
         android:id="@+id/EmailText"
         android:layout_marginHorizontal="40sp"
-        android:layout_marginTop="150sp"
+        android:layout_marginTop="100sp"
         android:hint="@string/email"
         android:textSize="30dp"
         android:layout_width="match_parent"
@@ -40,5 +40,13 @@
         android:text="@string/sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>
