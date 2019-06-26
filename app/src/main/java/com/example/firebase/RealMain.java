@@ -143,8 +143,12 @@ public class RealMain extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                Log.d("Date", "onDateSet: dd-mm-yyyy: " + day + "-" + month );
-                date = day + "-" + month;
+                String stringDay = ""+day;
+                if(stringDay.length()==1) stringDay = "0" + stringDay;
+                String stringMonth = ""+month;
+                if(stringMonth.length()==1) stringMonth = "0" + stringMonth;
+
+                date=stringDay+"-"+stringMonth+"-"+year;
                 createNewTask(editNewTask.getText().toString(), date);
                 editNewTask.setText("");
                 collectData();

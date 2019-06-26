@@ -40,9 +40,9 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
         List_item list_item = mList_items.get(position);
         holder.checkBox.setText(list_item.getTask());
         holder.checkBox.setChecked(list_item.isDone());
-        holder.textView.setText(list_item.getDate());
+        holder.textView.setText(list_item.getDate().substring(0,5));
 
-        String format="dd-mm";
+        String format="dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         String now = simpleDateFormat.format(new Date());
         String taskDate = list_item.getDate();
@@ -50,7 +50,10 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
         try {
             Date dateNow = simpleDateFormat.parse(now);
             Date dateTaskDate= simpleDateFormat.parse(taskDate);
-            if (dateNow.compareTo(dateTaskDate) > 0) {
+            if (dateNow.compareTo(dateTaskDate) == 0) {
+                holder.textView.setTextColor(Color.BLUE);
+            }
+            else if(dateNow.compareTo(dateTaskDate) > 0) {
                 holder.textView.setTextColor(Color.RED);
             }
         } catch (ParseException e) {
