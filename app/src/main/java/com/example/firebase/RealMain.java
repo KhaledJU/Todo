@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +54,8 @@ public class RealMain extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private List<List_item> tasks;
     private List<String> taskId;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    private String date;
 
 
     private String TAG = "RealMain";
@@ -116,15 +123,37 @@ public class RealMain extends AppCompatActivity {
                 if(imageAdd == null || TextUtils.isEmpty(editNewTask.getText().toString()))
                     Toast.makeText(RealMain.this,"Please insert task first",Toast.LENGTH_SHORT).show();
                 else {
-                    createNewTask(editNewTask.getText().toString());
-                    editNewTask.setText("");
-                    collectData();
+                    Calendar cal = Calendar.getInstance();
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH);
+                    int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                    DatePickerDialog dialog = new DatePickerDialog(
+                            RealMain.this,
+                            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                            mDateSetListener,
+                            year,month,day);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog.show();
                 }
 
             }
         });
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                Log.d("Date", "onDateSet: dd-mm-yyyy: " + day + "-" + month );
+                date = day + "-" + month;
+                createNewTask(editNewTask.getText().toString(), date);
+                editNewTask.setText("");
+                collectData();
+            }
+
+        };
 
     }
+
 
     private void collectData() {
         recyclerView.setVisibility(View.GONE);
@@ -159,16 +188,17 @@ public class RealMain extends AppCompatActivity {
     }
 
     private void insertToList(QueryDocumentSnapshot data) {
-        tasks.add(new List_item(data.get("task").toString(),(boolean) data.get("done")));
+        tasks.add(new List_item(data.get("task").toString(),data.get("date").toString(), (boolean) data.get("done")));
         taskId.add(data.getId());
     }
 
-    private void createNewTask(String newTask) {
+    private void createNewTask(String newTask, String date) {
         // Create a new task
         Map<String, Object> task = new HashMap<>();
         task.put("userId", mAuth.getUid());
         task.put("task", newTask);
         task.put("done", false);
+        task.put("date",date);
 
         // Add a new task
         db.collection("todos")

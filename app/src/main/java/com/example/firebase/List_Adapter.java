@@ -1,15 +1,20 @@
 package com.example.firebase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> {
@@ -35,6 +40,23 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
         List_item list_item = mList_items.get(position);
         holder.checkBox.setText(list_item.getTask());
         holder.checkBox.setChecked(list_item.isDone());
+        holder.textView.setText(list_item.getDate());
+
+        String format="dd-mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        String now = simpleDateFormat.format(new Date());
+        String taskDate = list_item.getDate();
+
+        try {
+            Date dateNow = simpleDateFormat.parse(now);
+            Date dateTaskDate= simpleDateFormat.parse(taskDate);
+            if (dateNow.compareTo(dateTaskDate) > 0) {
+                holder.textView.setTextColor(Color.RED);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -46,11 +68,13 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.ViewHolder> 
 
         CheckBox checkBox;
         ImageView imageView;
+        TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             checkBox = itemView.findViewById(R.id.CheckDone);
             imageView = itemView.findViewById(R.id.ButtonDelete);
+            textView = itemView.findViewById(R.id.TextDate);
         }
     }
 }
