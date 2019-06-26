@@ -222,6 +222,7 @@ public class RealMain extends AppCompatActivity {
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
+
                     }
                 });
     }
