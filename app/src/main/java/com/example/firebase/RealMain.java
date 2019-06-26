@@ -1,6 +1,7 @@
 package com.example.firebase;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,8 +33,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -156,8 +160,43 @@ public class RealMain extends AppCompatActivity {
 
         };
 
+        scanData();
+
     }
 
+    private void scanData(){
+        db.collection("todos")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        collectData();
+
+//                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+//                            switch (dc.getType()) {
+//                                case ADDED:
+//                                    Log.d(TAG, "New city: " + dc.getDocument().getData());
+//                                    collectData();
+//                                    break;
+//                                case MODIFIED:
+//                                    Log.d(TAG, "Modified city: " + dc.getDocument().getData());
+//                                    collectData();
+//                                    break;
+//                                case REMOVED:
+//                                    Log.d(TAG, "Removed city: " + dc.getDocument().getData());
+//                                    collectData();
+//                                    break;
+//                            }
+//                        }
+
+                    }
+                });
+    }
 
     private void collectData() {
         recyclerView.setVisibility(View.GONE);
